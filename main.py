@@ -1,4 +1,5 @@
 import pygame
+import ast
 #Aqui vou usar uma biblioteca chamada tkinter.
 from tkinter import simpledialog
 pygame.init()
@@ -18,10 +19,14 @@ running = True
 #Cor branca.
 branco = (255,255,255)
 itens = []
+#Essa é a fonte dos comandos.(F10,F11,F12)
+fonte = pygame.font.Font(None, 24)
+
+
 
 #Isso é o raio do circulo criado quando adicioando uma estrela.
 raio = 3
-circulos = []
+
 
 while running:
     for event in pygame.event.get():
@@ -36,15 +41,56 @@ while running:
             else:
                 item = item + str(pos)
             itens.append((item, pos))
-            
-            
+            #TEM Q TERMINAR
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
+            try:
+                arquivo = open("SalvarPontos.txt","w")
+                for item in itens:
+                    arquivo.write("{0}\n".format(item))
+                arquivo.close()
+            except:
+                print("Erro ao salvar")
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
+            try:
+                arquivo = open("SalvarPontos.txt","r")
+                linhas = arquivo.readlines()
+                for item in linhas:
+                    tupla = ast.literal_eval(item)
+                    itens.append(tupla)
 
 
+
+            except:
+                print("Erro ao carregar os arquivos")
+
+
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F12:
+            arquivo = open("SalvarPontos.txt","w")
+            itens=[]
+            arquivo.close()            
+                    
+
+
+
+    f10 = fonte.render("Pressione F10 para salvar os Pontos", True , branco)
+    f11 = fonte.render("Pressione F11 para carregar as marcações salvas", True, branco)
+    f12 = fonte.render("Pressione F12 para excluir todas as marcações", True, branco)
+
+
+    #Essa linha é para o fundo.
     tela.blit(fundo,(0,0))
-    for item , pos in itens:
+    #Essas linhas é para exibir os comandos (F10,F11,F12)
+    tela.blit(f10, (10,10))
+    tela.blit(f11, (10,30))
+    tela.blit(f12, (10,50))
+    #Esse for é resonsavel por adicionar a escrita depois da caixa de pergunta.
+    for item, pos in itens:
         mensagemDisplay = pygame.font.SysFont(None, 24).render (item , True , branco)
         tela.blit(mensagemDisplay, pos)
         pygame.draw.circle(tela , branco , pos , raio)
+
 
 
     pygame.display.update()
