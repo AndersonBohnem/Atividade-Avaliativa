@@ -22,7 +22,14 @@ itens = []
 #Essa é a fonte dos comandos.(F10,F11,F12)
 fonte = pygame.font.Font(None, 24)
 
-
+def Salvar():
+    try:
+        arquivo = open("SalvarPontos.txt","w")
+        for item in itens:
+            arquivo.write("{0}\n".format(item))
+        arquivo.close()
+    except:
+        print("Erro ao salvar")
 
 #Isso é o raio do circulo criado quando adicioando uma estrela.
 raio = 3
@@ -31,6 +38,7 @@ raio = 3
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            Salvar()
             running = False
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
@@ -41,15 +49,13 @@ while running:
             else:
                 item = item + str(pos)
             itens.append((item, pos))
-            #TEM Q TERMINAR
+            
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
-            try:
-                arquivo = open("SalvarPontos.txt","w")
-                for item in itens:
-                    arquivo.write("{0}\n".format(item))
-                arquivo.close()
-            except:
-                print("Erro ao salvar")
+            Salvar()
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            Salvar()
+            running = False
 
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
             try:
@@ -86,10 +92,21 @@ while running:
     tela.blit(f11, (10,30))
     tela.blit(f12, (10,50))
     #Esse for é resonsavel por adicionar a escrita depois da caixa de pergunta.
+    primeiro = True
+    coord1 = ()
+    coord2 = ()
     for item, pos in itens:
         mensagemDisplay = pygame.font.SysFont(None, 24).render (item , True , branco)
         tela.blit(mensagemDisplay, pos)
         pygame.draw.circle(tela , branco , pos , raio)
+        if primeiro == True:
+            coord1 = pos
+            primeiro = False
+        else:
+            coord2 = pos
+            pygame.draw.line(tela, branco, coord1, coord2, 1)
+            coord1= pos
+
 
 
 
