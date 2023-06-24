@@ -1,5 +1,6 @@
 import pygame
 import ast
+import math
 #Aqui vou usar uma biblioteca chamada tkinter.
 from tkinter import simpledialog
 pygame.init()
@@ -21,7 +22,7 @@ branco = (255,255,255)
 itens = []
 #Essa é a fonte dos comandos.(F10,F11,F12)
 fonte = pygame.font.Font(None, 24)
-
+#Essa função tem como objetivo salvar os pontos criados.
 def Salvar():
     try:
         arquivo = open("SalvarPontos.txt","w")
@@ -34,7 +35,7 @@ def Salvar():
 #Isso é o raio do circulo criado quando adicioando uma estrela.
 raio = 3
 
-
+#Esse é o while principal.
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -43,7 +44,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             item = simpledialog.askstring("Space" , "Nome da Estrela:")
-            print(item)
+
             if item == "":
                 item = "desconhecido"+str(pos)
             else:
@@ -65,25 +66,17 @@ while running:
                     tupla = ast.literal_eval(item)
                     itens.append(tupla)
 
-
-
             except:
                 print("Erro ao carregar os arquivos")
-
-
 
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_F12:
             arquivo = open("SalvarPontos.txt","w")
             itens=[]
             arquivo.close()            
                     
-
-
-
     f10 = fonte.render("Pressione F10 para salvar os Pontos", True , branco)
     f11 = fonte.render("Pressione F11 para carregar as marcações salvas", True, branco)
     f12 = fonte.render("Pressione F12 para excluir todas as marcações", True, branco)
-
 
     #Essa linha é para o fundo.
     tela.blit(fundo,(0,0))
@@ -91,10 +84,13 @@ while running:
     tela.blit(f10, (10,10))
     tela.blit(f11, (10,30))
     tela.blit(f12, (10,50))
-    #Esse for é resonsavel por adicionar a escrita depois da caixa de pergunta.
+    
     primeiro = True
     coord1 = ()
     coord2 = ()
+    primeiro1 = True
+    coordDistancia1 = ()
+    coordDistancia2 = ()
     for item, pos in itens:
         mensagemDisplay = pygame.font.SysFont(None, 24).render (item , True , branco)
         tela.blit(mensagemDisplay, pos)
@@ -107,8 +103,18 @@ while running:
             pygame.draw.line(tela, branco, coord1, coord2, 1)
             coord1= pos
 
-
-
+        if primeiro1 == True:
+            coordDistancia1 = pos
+            primeiro1 = False
+        else:
+            coordDistancia2 = pos
+            distancia = 0
+            distancia = math.sqrt((coordDistancia1[0]-coordDistancia2[0])**2 + (coordDistancia1[1]-coordDistancia2[1])**2)
+            pontoMedio = ((coordDistancia1[0] + coordDistancia2[0]) // 2, (coordDistancia1[1] + coordDistancia2[1]) // 2)
+            distancia_formatada = "({:.0f})".format(distancia)[:5]
+            AparecerDistancia = fonte.render(str(distancia_formatada), True, branco)
+            tela.blit(AparecerDistancia, (pontoMedio))
+            coordDistancia1 = pos
 
     pygame.display.update()
 
