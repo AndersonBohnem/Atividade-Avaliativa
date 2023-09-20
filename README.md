@@ -1,5 +1,5 @@
-# Atividade-Avaliativa
-Trabalho visual chamado Space-Marker.
+# Space-Marker
+Foi um trabalho visual usando a linguagem Python.
 
   Esse trabalho teve como objetivo implementar um código na qual tem a função de demarcar estrelas, quando o programa é rodado aparece uma tela e o usuario pode criar pontos, nomeando ou não os pontos criados e é tracejado uma linha reta contendo a distancia de pixels entre eles.
   
